@@ -11,6 +11,7 @@ public enum PersistenceController {
     public static let schema = Schema([
         Alarm.self,
         ReactionAttempt.self,
+        WakeRecord.self,
         AppSettings.self,
     ])
 

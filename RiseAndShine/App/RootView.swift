@@ -1,14 +1,20 @@
 import SwiftData
 import SwiftUI
 
-/// Stage 1 placeholder shell.
+/// Root tab shell. Establishes the app's five tabs (Alarms, Trainer, Bedtime,
+/// Stats, Settings). The Stats tab is fully implemented; the others are
+/// placeholders filled in by later stages.
 ///
-/// This establishes the tab structure the app will grow into (Alarms,
-/// Trainer, Bedtime, Stats, Settings) and proves the SwiftData container is
-/// wired up by reporting the current alarm count. Feature screens are filled
-/// in starting in Stage 2.
+/// `RootView` owns the `LeaderboardModel` (a `@MainActor @Observable`) and
+/// injects it into the environment so the Stats/Leaderboard screens share one
+/// instance. It uses the real Game Center service; nothing connects until the
+/// user opts in.
 struct RootView: View {
+    @Environment(\.modelContext) private var context
     @Query private var alarms: [Alarm]
+    @Query private var settingsList: [AppSettings]
+
+    @State private var leaderboard = LeaderboardModel(service: GameCenterService())
 
     var body: some View {
         TabView {
@@ -33,12 +39,23 @@ struct RootView: View {
             )
             .tabItem { Label(L10n.Tab.bedtime, systemImage: "bed.double.fill") }
 
+            StatsView()
+                .tabItem { Label(L10n.Tab.stats, systemImage: "chart.bar.fill") }
+
             placeholder(
                 title: L10n.Tab.settings,
                 systemImage: "gearshape.fill",
                 message: L10n.Placeholder.comingSoon
             )
             .tabItem { Label(L10n.Tab.settings, systemImage: "gearshape.fill") }
+        }
+        .environment(leaderboard)
+        .task {
+            // Ensure settings exist and reflect a prior opt-in into the model.
+            let settings = settingsList.first ?? PersistenceController.loadSettings(in: context)
+            if settings.leaderboardOptIn, !leaderboard.optedIn {
+                await leaderboard.setOptedIn(true)
+            }
         }
     }
 
@@ -55,7 +72,9 @@ struct RootView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     RootView()
-        .modelContainer(PersistenceController.makeInMemoryContainer())
+        .modelContainer(PreviewData.container(withSampleData: true))
 }
+#endif

@@ -25,6 +25,11 @@ public final class AppSettings {
     public var targetWakeMinutes: Int
     public var bedtimeReminderLeadMinutes: Int
 
+    /// Opt-in to the global Game Center wake-up-streak leaderboard. Off by
+    /// default: no Game Center authentication or score submission happens until
+    /// the user explicitly enables this.
+    public var leaderboardOptIn: Bool
+
     public init(
         defaultSnoozeMinutes: Int = 9,
         defaultSoundId: String = AlarmSoundCatalog.defaultSoundId,
@@ -36,7 +41,8 @@ public final class AppSettings {
         bedtimeReminderEnabled: Bool = false,
         targetBedtimeMinutes: Int = 23 * 60,   // 11:00 PM
         targetWakeMinutes: Int = 7 * 60,        // 7:00 AM
-        bedtimeReminderLeadMinutes: Int = 30
+        bedtimeReminderLeadMinutes: Int = 30,
+        leaderboardOptIn: Bool = false
     ) {
         self.defaultSnoozeMinutes = defaultSnoozeMinutes
         self.defaultSoundId = defaultSoundId
@@ -49,6 +55,7 @@ public final class AppSettings {
         self.targetBedtimeMinutes = targetBedtimeMinutes
         self.targetWakeMinutes = targetWakeMinutes
         self.bedtimeReminderLeadMinutes = bedtimeReminderLeadMinutes
+        self.leaderboardOptIn = leaderboardOptIn
     }
 }
 
