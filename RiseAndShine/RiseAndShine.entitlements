@@ -4,5 +4,15 @@
 <dict>
 	<key>com.apple.developer.game-center</key>
 	<true/>
+	<!-- Time-sensitive notifications (freely available) so alarm notifications
+	     can break through Focus on the notification fallback path. -->
+	<key>com.apple.developer.usernotifications.time-sensitive</key>
+	<true/>
+	<!-- Critical alerts let sound play in silent mode / DND on the notification
+	     path, but require Apple approval. Uncomment after approval, and pass
+	     useCriticalAlerts: true when building the scheduler.
+	<key>com.apple.developer.usernotifications.critical-alerts</key>
+	<true/>
+	-->
 </dict>
 </plist>

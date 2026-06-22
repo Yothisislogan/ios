@@ -115,4 +115,13 @@ enum L10n {
         static let green = String(localized: "accent.green", defaultValue: "Green")
         static let orange = String(localized: "accent.orange", defaultValue: "Orange")
     }
+
+    enum AlarmEngine {
+        static let defaultAlarmTitle = String(localized: "alarmEngine.defaultTitle", defaultValue: "Alarm")
+        static let notificationBody = String(localized: "alarmEngine.notificationBody", defaultValue: "Tap to wake up and dismiss.")
+        static let stopButton = String(localized: "alarmEngine.stop", defaultValue: "Stop")
+        static let snoozeButton = String(localized: "alarmEngine.snooze", defaultValue: "Snooze")
+        static let errorNotAuthorized = String(localized: "alarmEngine.error.notAuthorized", defaultValue: "Allow notifications (or alarm access) to make sure your alarms can go off.")
+        static let errorUnavailable = String(localized: "alarmEngine.error.unavailable", defaultValue: "The alarm service is currently unavailable.")
+    }
 }

@@ -28,8 +28,15 @@ targets:
         CODE_SIGN_ENTITLEMENTS: RiseAndShine/RiseAndShine.entitlements
         TARGETED_DEVICE_FAMILY: "1,2"
         SWIFT_STRICT_CONCURRENCY: complete
+        # AlarmKit (iOS 26+) is gated behind this flag. It is OFF by default so
+        # the app builds on the notification backend. To adopt AlarmKit, add
+        # RISE_ENABLE_ALARMKIT here, build on Xcode 26, and verify
+        # AlarmKitAlarmScheduler/AlarmIntents against the SDK.
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited)"
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_CFBundleDisplayName: Rise & Shine
+        # AlarmKit authorization prompt copy (iOS 26+); harmless on older OSes.
+        INFOPLIST_KEY_NSAlarmKitUsageDescription: "Rise & Shine uses alarms so your wake-up times reliably go off, even in silent mode or Focus."
         INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
 

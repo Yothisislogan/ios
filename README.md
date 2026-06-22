@@ -54,21 +54,38 @@ RiseAndShineTests/   Unit tests for the pure domain logic
 - **Pure domain logic is isolated from SwiftData/SwiftUI** so the scheduling and
   scoring rules are fully covered by fast unit tests.
 
-## iOS reliability constraints (important)
+## Alarm firing: hybrid AlarmKit + notifications
 
 iOS does **not** let an app run arbitrary code at a scheduled time while
-backgrounded or locked. Alarms therefore fire via **local notifications**, and
-the app cannot guarantee custom audio/UI at the exact fire instant without
-notification delivery. The planned design (later stages) accounts for this:
+backgrounded or locked. The app schedules through a single `AlarmScheduling`
+abstraction with two interchangeable backends, chosen at runtime by
+`AlarmSchedulerFactory`:
 
-- Critical-alert entitlement is used where appropriate so the alarm sounds even
-  in silent/Do-Not-Disturb modes (requires an Apple entitlement request).
-- The reaction challenge is presented when the user **opens the notification or
-  the app**; a fallback dismiss path ensures a user is never locked out of
-  silencing an alarm.
-- Snooze is always reachable in a single tap; only *full dismiss* is gated.
+- **AlarmKit** (`AlarmKitAlarmScheduler`, iOS 26+) — true system alarms that
+  **break through silent mode and Focus** and present a system alerting UI on
+  the Lock Screen / Dynamic Island, with stop/snooze buttons wired to App
+  Intents. Requires the `NSAlarmKitUsageDescription` Info.plist key and one-time
+  `requestAuthorization()`.
+- **Local notifications** (`NotificationAlarmScheduler`, iOS 17+) — the fallback
+  below iOS 26. Cannot break through the ringer switch; uses a time-sensitive
+  interruption level (the free `usernotifications.time-sensitive` entitlement),
+  and can sound in silent mode only with the approval-gated critical-alert
+  entitlement.
 
-These behaviors are implemented from Stage 3 onward.
+The pure `NotificationRequestPlanner` (Alarm → notification requests) is
+unit-tested; the system-touching backends are thin wrappers around it / AlarmKit.
+
+> **Enabling AlarmKit:** the AlarmKit files are gated behind
+> `canImport(AlarmKit) && RISE_ENABLE_ALARMKIT` and the flag is **off by
+> default**, so the default build uses notifications. They were authored against
+> the iOS 26 SDK but **not compiled here** — add `RISE_ENABLE_ALARMKIT` to
+> `SWIFT_ACTIVE_COMPILATION_CONDITIONS`, build on Xcode 26, and reconcile any API
+> differences before shipping the AlarmKit path.
+
+Regardless of backend: the reaction challenge appears when the user opens the
+app from the alarm, a fallback path ensures no one is locked out of silencing an
+alarm, and snooze is always reachable in one tap (only *full dismiss* is gated).
+The reaction-gate hand-off is wired in Stage 4.
 
 ## Build status / stages
 
@@ -76,7 +93,8 @@ This codebase is being built incrementally:
 
 1. **✅ Scaffold + data model + persistence** *(current)*
 2. ⬜ Alarm list + create/edit UI
-3. ⬜ Local notification scheduling + reliable firing
+3. 🟡 Reliable firing — `AlarmScheduling` abstraction + notification backend +
+   AlarmKit backend (behind a flag) landed; app-launch sync + permission UX pending
 4. ⬜ Reaction-timer challenge as the dismiss gate
 5. ⬜ Standalone Reaction Trainer + history
 6. ⬜ Bedtime/sleep schedule + statistics
