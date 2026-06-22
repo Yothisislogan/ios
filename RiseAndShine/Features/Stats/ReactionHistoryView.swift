@@ -72,7 +72,7 @@ struct ReactionHistoryView: View {
                     y: .value("Milliseconds", attempt.averageMs)
                 )
                 .symbolSize(40)
-                .foregroundStyle(attempt.passed ? Color.green : Color.orange)
+                .foregroundStyle(attempt.passed ? Brand.success : Brand.warning)
             }
             .frame(height: 200)
             .accessibilityLabel(L10n.History.chartTitle)
@@ -93,7 +93,7 @@ struct ReactionHistoryView: View {
                     Text(L10n.History.ms(attempt.averageMs))
                         .monospacedDigit()
                     Image(systemName: attempt.passed ? "checkmark.circle.fill" : "xmark.circle.fill")
-                        .foregroundStyle(attempt.passed ? .green : .orange)
+                        .foregroundStyle(attempt.passed ? Brand.success : Brand.warning)
                         .accessibilityLabel(attempt.passed ? "Passed" : "Failed")
                 }
             }

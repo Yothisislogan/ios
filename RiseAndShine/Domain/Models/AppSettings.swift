@@ -37,7 +37,7 @@ public final class AppSettings {
         uses24HourFormat: Bool = false,
         hapticsEnabled: Bool = true,
         theme: AppTheme = .system,
-        accentColor: AppAccentColor = .sunrise,
+        accentColor: AppAccentColor = .witBlue,
         bedtimeReminderEnabled: Bool = false,
         targetBedtimeMinutes: Int = 23 * 60,   // 11:00 PM
         targetWakeMinutes: Int = 7 * 60,        // 7:00 AM
@@ -71,7 +71,7 @@ public extension AppSettings {
     }
 
     var accentColor: AppAccentColor {
-        get { AppAccentColor(rawValue: accentColorRaw) ?? .sunrise }
+        get { AppAccentColor(rawValue: accentColorRaw) ?? .witBlue }
         set { accentColorRaw = newValue.rawValue }
     }
 }

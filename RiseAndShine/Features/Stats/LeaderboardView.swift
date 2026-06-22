@@ -33,7 +33,7 @@ struct LeaderboardView: View {
                 case .failed(let message):
                     Section {
                         Label(message, systemImage: "exclamationmark.triangle")
-                            .foregroundStyle(.orange)
+                            .foregroundStyle(Brand.warning)
                         Button(L10n.Leaderboard.retry) { Task { await connect() } }
                     }
                 case .ready:

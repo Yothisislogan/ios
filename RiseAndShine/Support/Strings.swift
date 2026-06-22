@@ -110,10 +110,9 @@ enum L10n {
     }
 
     enum Accent {
-        static let sunrise = String(localized: "accent.sunrise", defaultValue: "Sunrise")
-        static let ocean = String(localized: "accent.ocean", defaultValue: "Ocean")
-        static let forest = String(localized: "accent.forest", defaultValue: "Forest")
-        static let grape = String(localized: "accent.grape", defaultValue: "Grape")
-        static let slate = String(localized: "accent.slate", defaultValue: "Slate")
+        static let witBlue = String(localized: "accent.witBlue", defaultValue: "WIT Blue")
+        static let deepBlue = String(localized: "accent.deepBlue", defaultValue: "Deep Blue")
+        static let green = String(localized: "accent.green", defaultValue: "Green")
+        static let orange = String(localized: "accent.orange", defaultValue: "Orange")
     }
 }

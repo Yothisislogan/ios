@@ -16,6 +16,8 @@ struct RootView: View {
 
     @State private var leaderboard = LeaderboardModel(service: GameCenterService())
 
+    private var activeSettings: AppSettings? { settingsList.first }
+
     var body: some View {
         TabView {
             placeholder(
@@ -49,6 +51,8 @@ struct RootView: View {
             )
             .tabItem { Label(L10n.Tab.settings, systemImage: "gearshape.fill") }
         }
+        .tint(activeSettings?.accentColor.color ?? Brand.primary)
+        .preferredColorScheme(activeSettings?.theme.colorScheme)
         .environment(leaderboard)
         .task {
             // Ensure settings exist and reflect a prior opt-in into the model.
